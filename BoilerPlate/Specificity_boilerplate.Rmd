@@ -1,0 +1,71 @@
+---
+title: "AssaySpecificity"
+author: "TaylorWilcox"
+date: "October 3, 2023"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+require(MASS)
+require(dplyr)
+```
+
+## Load data
+Input data should have columns: Genus, Species,	AP
+
+```{r}
+data <- read.csv(file.choose())
+group_by(data, Genus) %>% summarize(N = n(), MeanAP = mean(AP))
+```
+
+## Estimate beta probability density function
+```{r, include=FALSE}
+family <- sample(data$AP, size = 500, replace = T)     
+beta <- fitdistr(family, densfun = "beta", start = list(shape1 = 2, shape2 = 2))
+```
+
+```{r}
+beta
+```
+
+## Histogram and inferred probability density function
+
+Observed eDNAssay assignment probabilities are shown in the histogram. 
+```{r, echo=FALSE}
+
+### Plot
+hist(data$AP, add = F, col = "darkorange", freq = F, xlim = c(0, 1),
+     main = "", xlab = "eDNAssay AP")
+
+lines(dbeta(seq(0,1,0.01), 
+            shape1 = beta$estimate[1], 
+            shape2 = beta$estimate[2]) ~ seq(0,1,0.01),
+      lwd = 2, col = "blue")
+
+abline(v = 0.30, col = "red", lty = 2)
+abline(v = 0.50, col = "red", lty = 2)
+
+### Table
+mid_030 <- round(1 - pbeta(0.30, shape1 = beta$estimate[1], shape2 = beta$estimate[2]), 3)
+mid_050 <- round(1 - pbeta(0.50, shape1 = beta$estimate[1], shape2 = beta$estimate[2]), 3)
+
+summary_matrix <- matrix(c(mid_030, mid_050), 
+                         nrow = 2, ncol = 1)
+
+colnames(summary_matrix) <- c("Estimate")
+rownames(summary_matrix) <- c("0.30 threshold", "0.50 threshold")
+```
+
+## Summary table
+Table showing estimated probability of an unsampled confamilial exceeding an assignment probability thershold of 0.30 (first row) or 0.50 (second row) using probability density functions.
+
+```{r, echo=FALSE}
+summary_matrix
+```
