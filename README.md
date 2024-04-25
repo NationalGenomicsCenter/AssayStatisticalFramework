@@ -1,6 +1,6 @@
 # AssayStatistcialSpecificityInference
 
-Analysis for Wilcox et al. THE UNKNOWN UNKNOWN: A FRAMEWORK FOR ASSESSING ENVIRONMENTAL DNA ASSAY SPECIFICITY AGAINST UNSAMPLED TAXA
+Analysis for Wilcox et al. THE UNKNOWN UNKNOWN: A FRAMEWORK FOR ASSESSING ENVIRONMENTAL DNA ASSAY SPECIFICITY AGAINST UNSAMPLED TAXA https://onlinelibrary.wiley.com/doi/full/10.1111/1755-0998.13932
 
 We assembled species lists, sequence data, and eDNAssay assignment probability for four assays
 
